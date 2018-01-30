@@ -1,0 +1,27 @@
+.container {
+    font-family: "Big Caslon", "Book Antiqua", "Palatino Linotype", Georgia, serif;
+  }
+  
+  h3 {
+    margin-bottom: 20px;
+  }
+  
+  .add_quote {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    background-color: #eee;
+    border-radius: 6px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .quotes {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    background-color: #eee;
+    border-radius: 6px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }

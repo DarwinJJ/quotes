@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quotes</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/quotes.css' %}">
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'quotes:home' %}">Quotes</a>
+          </div>
+          
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'quotes:home' %}">Home</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="{% url 'users:logout' %}">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      {% if messages %}
+        {% for message in messages %}
+          {{message}}
+        {% endfor %}
+      {% endif %}
+      <div class="page-header">
+        <h1>Welcome, {{request.session.alias}}!</h1>
+      </div>
+        {% if quotes.exists %}
+          <h3>Quotable Quotes</h3>
+          {% for quote in quotes %}
+          <div class="quotes">
+            <h4>"{{quote.message}}"-{{quote.author}}</h4>
+            <em><h5>Posted by: <a href="{% url 'quotes:user' id=quote.posted_by.id %}">{{quote.posted_by.alias}}</a></h5></em>
+            <a href="{% url 'quotes:add_to_list' id=quote.id %}" class="btn btn-info" role="button">Add To List</a>
+          </div>
+          {% endfor %}
+        {% else %}
+          <h3>All quotes are added to favorites!</h3>
+        {% endif %}
+
+        <h3>Your Favorite Quotes</h3>
+        {% for favorite in favorites %}
+          {% if request.session.user_id == favorite.user.id %}
+          <div class="quotes">
+            <h4>"{{favorite.quote.message}}"-{{favorite.quote.author}}</h4>
+            <em><h5>Posted By: <a href="{% url 'quotes:user' id=favorite.quote.posted_by.id %}">{{favorite.quote.posted_by.alias}}</a></h5></em>
+            <a href="{% url 'quotes:remove' id=favorite.quote.id %}" class="btn btn-danger" role="button">Remove From List</a>
+          </div>
+          {% endif %}
+        {% endfor %}
+
+      <h3>Contribute a Quote</h3>
+      <div class="add_quote">
+        <form class="form-horizontal" action="{% url 'quotes:add_quote' %}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="control-label col-sm-1" for="quoted_by">Quoted By</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="author">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-1" for="message">Message</label>
+            <div class="col-sm-6">
+              <textarea class="form-control" rows="5" name="message"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-10">
+              <button type="submit" class="btn btn-default">Submit Quote</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
